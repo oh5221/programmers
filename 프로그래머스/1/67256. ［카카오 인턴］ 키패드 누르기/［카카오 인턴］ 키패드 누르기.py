@@ -18,9 +18,6 @@ def solution(numbers, hand):
     left = '*'
     right = '#'
     
-    # Ldistance = 0
-    # Rdistance = 0
-    
     answer = ''
     
     
