@@ -1,14 +1,6 @@
 def solution(s):
-    # answer = s.split() # 단어 별로 구분하기 위함
     answer = list(s)
     # print(answer)
-    
-    '''
-    for words in answer:
-        word = words[0].upper() + words[1:].lower()
-        # print(word)
-        JadenCase.append(word)
-    '''
     
     for idx, word in enumerate(answer):
         if word.isalpha():
@@ -23,6 +15,6 @@ def solution(s):
     # print(answer)    
     
     answer = "".join(answer)
-    print(answer)
+    # print(answer)
     
     return answer
