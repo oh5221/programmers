@@ -10,11 +10,6 @@ def solution(s):
     # 반례 ())((()))(()
     # 개수는 맞는데 중간에 )(가 끼어 있는 경우
     
-    # 앞에서부터 돌면서 () 완성되면 배열에서 삭제하기
-    # 그러면서 맨 앞에 )가 오면 바로 false
-    
-    copy_s = s # 문자열 복사. 삭제 시 오류 방지용
-    
     # 앞에서부터 돌면서 (를 stack 배열에 넣기
     # )를 만나면 stack에서 pop하기
     stack = []
@@ -24,6 +19,7 @@ def solution(s):
         else:
             if not stack:
                 answer = False
+                break
             else: stack.pop()
             
 
