@@ -2,6 +2,8 @@
 
 [문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42746) 
 
+검색으로 해결 ㅠㅠ
+
 ### 성능 요약
 
 메모리: 10.1 MB, 시간: 0.01 ms
