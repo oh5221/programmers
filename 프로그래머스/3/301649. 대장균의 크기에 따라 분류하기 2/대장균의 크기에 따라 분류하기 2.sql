@@ -1,0 +1,23 @@
+-- ECOLI_DATA: ID, SIZE_OF_COLONY
+-- SIZE DESC 상위 25%까지 CRITICAL, 50%까지 HIGH, 75%가 MEDIUM, 100%가 LOW
+-- RANK 함수를 써서 몇등인지를 기록해 두면 될 거 같아요 (CTE)
+-- 바깥쪽에서 CASE WHEN을 쓰고, CTE문에서 RANK / COUNT(*) * 100 <= 25
+
+WITH RANK_SIZE AS (
+    SELECT ID, SIZE_OF_COLONY, 
+            RANK() OVER (ORDER BY SIZE_OF_COLONY DESC) AS RK
+    FROM ECOLI_DATA
+),
+CNT AS (
+    SELECT COUNT(*) AS CNT_SIZE
+    FROM RANK_SIZE
+)
+SELECT
+    ID, CASE 
+            WHEN RK / C.CNT_SIZE * 100 <= 25 THEN 'CRITICAL'
+            WHEN RK / C.CNT_SIZE * 100 <= 50 THEN 'HIGH'
+            WHEN RK / C.CNT_SIZE * 100 <= 75 THEN 'MEDIUM'
+            ELSE 'LOW'
+            END AS COLONY_NAME
+FROM RANK_SIZE RS, CNT C
+ORDER BY ID
