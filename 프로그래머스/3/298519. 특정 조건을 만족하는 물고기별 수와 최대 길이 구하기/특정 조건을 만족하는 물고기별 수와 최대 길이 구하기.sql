@@ -1,0 +1,14 @@
+-- FISH_INFO: ID, FISH_TYPE, LENGTH, TIME
+-- 10cm 이하면 LENGH = NULL
+-- 평균 길이가 33cm 이상인 물고기를 종류별로 -> COUNT, MAX(LENGTH), TYPE
+-- ORDER BY TYPE ASC으로 정렬 / LENGTH가 NULL이면 10으로 취급
+
+-- case when 으로 NULL을 10cm로 지정해서 AVG(LENGTH) 구하고
+-- where절에서 avg length가 33 이상인 것을 구하면 
+SELECT COUNT(ID) AS FISH_COUNT, 
+        MAX(LENGTH) AS MAX_LENGTH, 
+        FISH_TYPE
+FROM FISH_INFO F1
+GROUP BY FISH_TYPE
+HAVING AVG(IFNULL(LENGTH, 10)) >= 33 
+ORDER BY FISH_TYPE
