@@ -1,25 +1,20 @@
+# 수포자 1: 1 2 3 4 5 -> 5개
+# 수포자 2: 2 1 2 3 2 4 2 5 -> 8개 단위 패턴
+# 수포자 3: 3 3 1 1 2 2 4 4 5 5 -> 10개 단위 패턴
 def solution(answers):
-    # 수포자 1 : 1 2 3 4 5 반복
-    # 수포자 2 : 2 / 1 2 3 / 2 / 4 / 2 / 5  반복
-    # 수포자 3: 3 3 / 1 1 / 2 2 / 4 4 / 5 5  반복 (3-1-2-4-5)
-
-    su1 = [1, 2, 3, 4, 5]
-    su2 = [2, 1, 2, 3, 2, 4, 2, 5] 
-    su3 = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]
+    supoja1 = [1,2,3,4,5]
+    supoja2 = [2,1,2,3,2,4,2,5]
+    supoja3 = [3,3,1,1,2,2,4,4,5,5]
     
-    answer = [0,0,0]
-    for i in range(len(answers)):
-        if answers[i] == su1[i%len(su1)]:
-            answer[0] += 1
-        if answers[i] == su2[i%len(su2)]:
-            answer[1] += 1
-        if answers[i] == su3[i%len(su3)]:
-            answer[2] += 1
-
-    print(answer)
-    result = []
-    for idx, ans in enumerate(answer):
-        if max(answer) == ans:
-            result.append(idx + 1)
+    scores = [0, 0, 0, 0]
     
-    return result
+    for i, ans in enumerate(answers):
+        if ans == supoja1[i % len(supoja1)]:
+            scores[0] += 1
+        if ans == supoja2[i % len(supoja2)]:
+            scores[1] += 1
+        if ans == supoja3[i % len(supoja3)]:
+            scores[2] += 1
+        
+    max_score = max(scores)
+    return [i+1 for i, s in enumerate(scores) if s == max_score]
