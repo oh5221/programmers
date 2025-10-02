@@ -1,14 +1,15 @@
-# 한 명 빼고 마라톤 완주함 -> 누군지 return
-# 동명이인 있을 수 있음
+# 참여: part  / 완주: complete 
+# 완주하지 못한 선수의 이름은?
+# participant를 dictionary로 만들어서 -> 이름이 key, count가 value
+# completion에 해당하면 -1 하기
+from collections import Counter
 def solution(participant, completion):
-    answer = ''
-    part = {name:0 for name in participant}
-    complete = {name:0 for name in completion}
+    counts = Counter(participant)
     
-    for p in participant:
-        part[p] += 1
-    for c in completion:
-        part[c] -= 1
-    for name, value in enumerate(part):
-        if part[value] > 0:
-            return value
+    for name in completion:
+        if name in counts:
+            counts[name] -= 1
+    
+    for name in counts:
+        if counts[name] != 0:
+            return name
