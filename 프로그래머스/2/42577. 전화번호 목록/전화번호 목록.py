@@ -1,6 +1,6 @@
 # phone_book에서 한 번호가 다른 번호의 접두어라면 false, 아니면 true
 # 정렬해서? 필요없나?
-# 2중 for문으로 체크...?
+# 2중 for문으로 체크...? -> 어차피 정렬하면 바로 옆의 것이랑만 비교하면 됨
 def solution(phone_book):
     phone_book.sort()
     for i in range(len(phone_book) - 1):
