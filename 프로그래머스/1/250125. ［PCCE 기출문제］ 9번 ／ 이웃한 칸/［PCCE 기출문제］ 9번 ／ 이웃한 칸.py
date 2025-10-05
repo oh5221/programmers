@@ -1,16 +1,17 @@
-# 위/아래/왼/오 중 같은 색으로 칠해진 칸의 개수
-# board[h][w]와 이웃한 칸에서 같은 색인 칸의 개수
+# 2차원 격자
+# 위, 아래, 왼, 오 중 같은 색의 칸은?
+[["blue", "red", "orange", "red"], 
+ ["red", "red", "blue", "orange"], 
+ ["blue", "orange", "red", "red"], 
+ ["orange", "orange", "red", "blue"]]
 def solution(board, h, w):
-    n = len(board)
-    count = 0
-    dh = [0, 1, -1, 0]
-    dw = [1, 0, 0, -1]
+    dh, dw = [0, 1, -1, 0], [1, 0, 0, -1]
+    answer = 0
     
     for i in range(4):
-        h_check = h + dh[i]
-        w_check = w + dw[i]
-        if 0 <= h_check < n and 0 <= w_check < n:
-            if board[h][w] == board[h_check][w_check]:
-                count += 1
+        if 0 <= h + dh[i] < len(board) and 0 <= w + dw[i] < len(board):
+            if board[h][w] == board[h+dh[i]][w+dw[i]]:
+                answer += 1
+            
     
-    return count
+    return answer
