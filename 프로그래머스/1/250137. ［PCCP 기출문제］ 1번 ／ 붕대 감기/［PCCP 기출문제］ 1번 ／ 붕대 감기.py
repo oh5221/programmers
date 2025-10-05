@@ -1,38 +1,35 @@
+# t초간 x만큼의 체력 -> t초 연속 성공하면 y만큼 추가 회복
+# max(체력회복량+원래체력, 최대체력). return은 남은체력 or -1 (죽음)
+# 공격당하면 -> 연속성공 0, 체력감소
+# bandage = [시전시간, 초당회복량, 추가회복량]
+# health = 최대체력 / attacks = [공격시간, 피해량]
+# attacks[-1][0]까지 for문 돌리면서?
 def solution(bandage, health, attacks):
-    t, x, y = bandage  # 시전 시간, 초당 회복량, 추가 회복량
-    current_health = health  # 현재 체력
-    consecutive_success = 0  # 연속 성공 시간
-    time = 0  # 현재 시간 인덱스
-    attack_index = 0  # 공격 리스트 인덱스
+    answer = 0
+    max_health = 0
+    max_health = health
+    time = attacks[-1][0] + 1
+    stack = 0 # 연속성공스택
     
-    while attack_index < len(attacks):
-        attack_time, damage = attacks[attack_index]
-        
-        # 몬스터 공격 전까지 붕대 감기 시전
-        while time < attack_time:
-            # 체력이 0 이하면 사망
-            if current_health <= 0:
+    for i in range(time):
+        if i == attacks[0][0]:
+            stack = 0
+            health -= attacks[0][1]
+            attacks.pop(0)
+            # print(f"공격당함. 현재 체력: {health} 남은 공격 {attacks}")
+            if health <= 0:
+                # print("사망")
                 return -1
-            
-            # 붕대 감기 시전 중
-            current_health += x  # 초당 회복량만큼 체력 회복
-            current_health = min(current_health, health)  # 최대 체력 초과 방지
-            consecutive_success += 1
-            
-            # 시전 시간만큼 붕대 감기에 성공한 경우 추가 회복
-            if consecutive_success == t:
-                current_health += y
-                current_health = min(current_health, health)  # 최대 체력 초과 방지
-                consecutive_success = 0  # 연속 성공 초기화
-            
-            time += 1  # 시간 증가
-        
-        # 몬스터 공격을 받는 경우
-        if time == attack_time:
-            current_health -= damage  # 피해량만큼 체력 감소
-            consecutive_success = 0  # 공격을 받으면 연속 성공 초기화
-            attack_index += 1  # 다음 공격으로 넘어감
-            time += 1  # 시간 증가
-            
-    # 공격이 모두 끝난 후 체력을 반환
-    return current_health if current_health > 0 else -1
+            continue
+        if health < max_health:
+            stack += 1
+            health += bandage[1]
+            health = min(health, max_health)
+            # print(f"회복 시전. 현재 체력: {health} 현재 스택: {stack}")
+        if stack == bandage[0]:
+            health += bandage[2]
+            health = min(health, max_health)
+            stack = 0
+            # print(f"회복 스택 max. 추가 회복. 현재 체력: {health}")
+    
+    return health
