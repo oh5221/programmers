@@ -1,76 +1,45 @@
-# 선물 주고받은 기록 바탕으로 다음 달의 max(선물받음) 구하기
-# a와 b 사이에 선물 주고받은 기록 있을 때 -> 더 많이 준 사람이 다음달에 받음
-# 주고받은 기록 없거나 같다면 -> 선물지수 큰 사람이 받음
-# 선물지수 = 자기가 준 선물 - 받은 선물
-# 선물지수도 같으면 주고받지 않음
-"""
-["muzi frodo",
- "muzi frodo", 
- "ryan muzi",
- "ryan muzi", 
- "ryan muzi", 
- "frodo muzi",
- "frodo ryan", 
- "neo muzi"]
-    give:
- 	{'muzi': {'ryan': 0, 'frodo': 2, 'neo': 0},
-    'ryan': {'muzi': 3, 'frodo': 0, 'neo': 0},
-    'frodo': {'muzi': 1, 'ryan': 1, 'neo': 0},
-    'neo': {'muzi': 1, 'ryan': 0, 'frodo': 0}}
-    
-    take:
-    {'muzi': {'ryan': 3, 'frodo': 1, 'neo': 1},
-    'ryan': {'muzi': 0, 'frodo': 1, 'neo': 0},
-    'frodo': {'muzi': 2, 'ryan': 0, 'neo': 0},
-    'neo': {'muzi': 0, 'ryan': 0, 'frodo': 0}}
-    
-    무지: 프로도한테 받음
-    라이언: 무지한테 받음
-    프로도: 라이언한테 받음
-    네오: 무지한테 받음, 프로도한테 받음
-    
-    선물 지수:
-    {'muzi': -3, 'ryan': 2, 'frodo': 0, 'neo': 1}
-"""
+# 선물 주고받은 기록이 있어야 -> 더 많은 선물 준 사람이 다음 달에 선물 받음
+# 주고받은 기록 없거나 같다면 -> 선물 지수 더 큰 사람이 작은 사람한테 받음
+# 선물 지수 = 모든 친구들에게 준 선물 수 - 받은 선물 수
+# 선물 지수까지도 같다면 주고받지 않음
+# 한 사람이 받는 선물 중 가장 많이 받는 선물 수는?
 def solution(friends, gifts):
-    give = {name: {other_name: 0 for other_name in friends 
-                   if other_name != name} for name in friends}
-    take = {name: {other_name: 0 for other_name in friends 
-                   if other_name != name} for name in friends}
-    present = {name:0 for name in friends}
-    for gift in gifts:
-        # 공백을 기준으로 나누었을 때
-        g = gift.split(" ")
-        giver, taker = g[0], g[1]
-        give[giver][taker] += 1
-        take[taker][giver] += 1
-        
-    # 선물 지수
-    for name in friends:
-        present[name] = sum(give[name].values()) - sum(take[name].values())
-        
-    next_month = {name:0 for name in friends}
+    answer = 0
+    gift_score = {name:0 for name in friends} # 선물 지수
+    take_gifts = {name:0 for name in friends} # 받을 선물 수
+    gnt = {name:[] for name in friends} # give and take
     
+    for gift in gifts:
+        g = gift.split()
+        # 선물 지수 계산
+        gift_score[g[0]] += 1
+        gift_score[g[1]] -= 1
+        # key가 준 사람, value가 받은 사람
+        gnt[g[0]].append(g[1])
+        
+    # print(gift_score)
+    # print(gnt)
+    
+    # 선물을 주고받은 기록이 있다면 == gnt에 기록돼있다면
+    # muzi, frodo일 때. gnt[muzi] 안에 frodo 수 랑 gnt[frodo] 안에 muzi 수 비교
+    # 더 크면 -> key값이 하나 더 받음 (take_gifts[muzi] += 1)
+    # 같으면 -> 선물 지수 비교 (gift_score[muzi], gift_score[frodo]) -> take_gifts[muzi] += 1
     for i in range(len(friends)):
         for j in range(i+1, len(friends)):
-            a, b = friends[i], friends[j]
-            a_to_b = give[a][b]
-            b_to_a = give[b][a]
-            
-            # a가 준 게 더 많다면 a가 받음
-            if a_to_b > b_to_a:
-                next_month[a] += 1
-            # b가 준 게 더 많다면 b가 받음
-            elif b_to_a > a_to_b:
-                next_month[b] += 1
-            # 동일하다면
+            if friends[i] == friends[j]:
+                continue
+            # print(take_gifts)
+    
+            if gnt[friends[j]].count(friends[i]) > gnt[friends[i]].count(friends[j]):
+                take_gifts[friends[j]] += 1
+            elif gnt[friends[j]].count(friends[i]) < gnt[friends[i]].count(friends[j]):
+                take_gifts[friends[i]] += 1
             else:
-                # a의 선물 지수가 더 높으면 a가 받음
-                if present[a] > present[b]:
-                    next_month[a] += 1
-                # b가 더 높으면 b가 받음
-                elif present[b] > present[a]:
-                    next_month[b] += 1
-    return max(next_month.values())
+                if gift_score[friends[i]] > gift_score[friends[j]]:
+                    take_gifts[friends[i]] += 1
+                elif gift_score[friends[i]] < gift_score[friends[j]]:
+                    take_gifts[friends[j]] += 1
+            
     
-    
+    # print(take_gifts)
+    return max(take_gifts.values())
