@@ -23,7 +23,7 @@ def solution(m, musicinfos):
             del m[0]
     # print(f"찾을 음계: {m_lst}")
     
-    for musicinfo in musicinfos:
+    for idx, musicinfo in enumerate(musicinfos):
         info = musicinfo.split(',')
         # print(info)
         start_time, end_time = info[0].split(':'), info[1].split(':')
@@ -32,18 +32,17 @@ def solution(m, musicinfos):
         
         music = list(info[3])
         music_lst = []
-        i = 0
         while music:
             if len(music) > 1:
-                if music[i+1] == '#':
-                    music_lst.append(''.join(music[i:i+2]))
-                    del music[i:i+2]
+                if music[1] == '#':
+                    music_lst.append(''.join(music[0:2]))
+                    del music[0:2]
                 else:
-                    music_lst.append(music[i])
-                    del music[i]
+                    music_lst.append(music[0])
+                    del music[0]
             else:
-                music_lst.append(music[i])
-                del music[i]
+                music_lst.append(music[0])
+                del music[0]
         # print(music_lst)
         
         full_music = music_lst * (time // len(music_lst))
